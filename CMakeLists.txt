@@ -87,6 +87,15 @@ target_include_directories(MethylateTestBam PRIVATE ${HTS_INCLUDE_DIRS})
 target_link_libraries(MethylateTestBam ${HTS_LIBRARIES} ${ZLIB} ${BZIP2} ${LZMA} ${CURLLIB})
 
 enable_testing()
+add_executable(MakeReadFilterTestBam MakeReadFilterTestBam.cpp)
+target_include_directories(MakeReadFilterTestBam PRIVATE ${HTS_INCLUDE_DIRS})
+target_link_libraries(MakeReadFilterTestBam ${HTS_LIBRARIES} ${ZLIB} ${BZIP2} ${LZMA} ${CURLLIB})
+add_test(NAME testReadFilterFlags
+        COMMAND ${CMAKE_COMMAND}
+            -DVERIFY_BAM_ID=$<TARGET_FILE:VerifyBamID>
+            -DMAKE_BAM=$<TARGET_FILE:MakeReadFilterTestBam>
+            -DTEST_DIR=${CMAKE_CURRENT_BINARY_DIR}/read-filter-test
+            -P ${CMAKE_CURRENT_SOURCE_DIR}/TestReadFilterFlags.cmake)
 add_test(NAME testReadVcf
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMAND TestReadVcf resource/test/test_readvcf.vcf)
